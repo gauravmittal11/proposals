@@ -14,7 +14,7 @@
 
         .hearts-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
 
-        /* --- SCANNER --- */
+        /* --- STAGE 1: SCANNER --- */
         #door-container {
             position: fixed; width: 100%; height: 100%; z-index: 1000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -31,9 +31,9 @@
 
         #confirm-btn { display: none; margin-top: 20px; padding: 15px 30px; background: #25d366; color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; }
 
-        /* --- GIFT --- */
+        /* --- STAGE 2: GIFT --- */
         #gift-screen { display: none; height: 100vh; width: 100%; flex-direction: column; justify-content: center; align-items: center; background: #fff0f5; }
-        .box-container { position: relative; width: 180px; height: 180px; cursor: pointer; animation: float 3s ease-in-out infinite; }
+        .box-container { position: relative; width: 180px; height: 180px; cursor: pointer; animation: float 3s ease-in-out infinite; margin: 0 auto; }
         .box-lid { position: absolute; top: 0; width: 100%; height: 45px; background: #e63946; border-radius: 10px 10px 0 0; z-index: 2; border-bottom: 5px solid #a41638; }
         .box-body { position: absolute; bottom: 0; width: 100%; height: 145px; background: #d62828; border-radius: 0 0 10px 10px; z-index: 1; }
         .ribbon-text { position: absolute; top: 50%; width: 100%; height: 35px; background: #fff; color: #d62828; display: flex; justify-content: center; align-items: center; font-weight: bold; transform: translateY(-50%); z-index: 3; font-size: 0.8rem; }
@@ -43,7 +43,7 @@
         .video-box { width: 90%; max-width: 500px; margin: 20px auto; border-radius: 20px; overflow: hidden; border: 4px solid #ff4d6d; }
         video { width: 100%; display: block; }
 
-        /* RESPONSIVE GALLERY */
+        /* IMPROVED RESPONSIVE GALLERY */
         .gallery {
             display: grid;
             grid-template-columns: 1fr; /* Mobile: 1 Column */
@@ -53,19 +53,19 @@
         }
 
         @media (min-width: 768px) {
-            .gallery { grid-template-columns: repeat(2, 1fr); } /* Laptop: 2 Columns */
+            .gallery { grid-template-columns: repeat(3, 1fr); } /* Laptop: 3 Columns */
         }
 
         .gallery-img { 
-            width: 100%; 
-            height: auto; /* Poori photo dikhegi */
-            border-radius: 15px; 
-            border: 3px solid #ff4d6d;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            width: 100%; height: auto; 
+            border-radius: 15px; border: 3px solid #ff4d6d;
+            background: white; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
         .beach-section { background: rgba(255, 255, 255, 0.7); padding: 30px 15px; margin: 40px 10px; border-radius: 20px; border: 2px dashed #ff4d6d; }
         .beach-msg { font-family: 'Poppins', sans-serif; font-size: 1.1rem; color: #d6336c; line-height: 1.6; }
+
+        .mystery-box { width: 120px; height: 120px; margin: 20px auto; }
 
         .btn-container { margin-top: 30px; padding-bottom: 100px; }
         .yes-btn { padding: 15px 40px; background: #25d366; color: white; border-radius: 50px; text-decoration: none; display: inline-block; font-weight: bold; }
@@ -117,7 +117,14 @@
                     I promise you, as I work hard on my fitness and lose this weight, I am preparing myself for that exact moment.<br><br>
                     One day very soon, it won't just be a dream—it will be our reality. ❤️"
                 </p>
-                <div class="video-box"><video playsinline controls loop><source src="beach.mp4" type="video/mp4"></video></div>
+                
+                <div class="box-container mystery-box" id="beachBox" onclick="openBeachBox()">
+                    <div class="box-lid"></div><div class="box-body"><div class="ribbon-text" style="font-size:0.5rem;">Open Me 🌊</div></div>
+                </div>
+
+                <div class="video-box" id="beachVideoBox" style="display:none;">
+                    <video id="beachVideo" playsinline controls loop><source src="beach.mp4" type="video/mp4"></video>
+                </div>
             </div>
 
             <div class="btn-container">
@@ -133,6 +140,7 @@
     <script>
         const scanner = document.getElementById('scanner');
         const mainVid = document.getElementById('myVideo');
+        const beachVid = document.getElementById('beachVideo');
         const confirmBtn = document.getElementById('confirm-btn');
         let scanTimer; let yesScale = 1;
 
@@ -158,6 +166,13 @@
             document.getElementById('main-content-area').style.display = 'block';
             document.body.style.overflowY = "auto";
             mainVid.play();
+        }
+
+        function openBeachBox() {
+            document.getElementById('beachBox').style.display = 'none';
+            document.getElementById('beachVideoBox').style.display = 'block';
+            mainVid.pause();
+            beachVid.play();
         }
 
         function moveNo() {
