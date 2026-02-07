@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Mona ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0; padding: 0; background-color: #fff0f5; color: #d6336c;
+            min-height: 100vh; font-family: 'Poppins', sans-serif; overflow-x: hidden;
+            user-select: none;
+        }
+
+        .hearts-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+
+        /* --- STAGE 1: SCANNER --- */
+        #door-container {
+            position: fixed; width: 100%; height: 100%; z-index: 1000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background-color: #ff85a1; transition: all 1s ease-in-out;
+        }
+        .scanner-gif { width: 180px; height: auto; margin-bottom: 20px; border-radius: 15px; }
+
+        .scanner-box {
+            position: relative; width: 140px; height: 140px; border: 4px solid #fff; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2); display: flex; justify-content: center; align-items: center; overflow: hidden;
+        }
+        .heart-scanner { font-size: 60px; animation: beat 1s infinite alternate; }
+        @keyframes beat { from { transform: scale(1); } to { transform: scale(1.2); } }
+        .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: #00ffcc; animation: scanMove 1.5s linear infinite; display: none; }
+        @keyframes scanMove { 0% { top: 0; } 100% { top: 100%; } }
+
+        #confirm-btn { display: none; margin-top: 20px; padding: 15px 30px; background: #25d366; color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1002; }
+
+        /* --- STAGE 2: GIFT --- */
+        #gift-screen { display: none; height: 100vh; width: 100%; flex-direction: column; justify-content: center; align-items: center; background: #fff0f5; }
+        .box-container { position: relative; width: 200px; height: 200px; cursor: pointer; animation: float 3s ease-in-out infinite; }
+        .box-lid { position: absolute; top: 0; width: 100%; height: 50px; background: #e63946; border-radius: 10px 10px 0 0; z-index: 2; border-bottom: 5px solid #a41638; }
+        .box-body { position: absolute; bottom: 0; width: 100%; height: 160px; background: #d62828; border-radius: 0 0 10px 10px; z-index: 1; }
+        .ribbon-text { position: absolute; top: 50%; width: 100%; height: 40px; background: #fff; color: #d62828; display: flex; justify-content: center; align-items: center; font-weight: bold; transform: translateY(-50%); z-index: 3; font-size: 0.8rem; }
+
+        /* --- STAGE 3: CONTENT --- */
+        #main-content-area { display: none; text-align: center; }
+        .video-box { width: 90%; max-width: 450px; margin: 20px auto; border-radius: 20px; overflow: hidden; border: 4px solid #ff4d6d; }
+        video { width: 100%; display: block; }
+
+        /* FIXED GALLERY - NO CROPPING */
+        .gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 90%;
+            margin: 30px auto;
+        }
+        .gallery-img { 
+            width: 100%; 
+            height: auto; /* IMPORTANT: Displays the full original image height */
+            border-radius: 15px; 
+            border: 3px solid #ff4d6d;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .beach-section { background: rgba(255, 255, 255, 0.7); padding: 30px 15px; margin: 40px 10px; border-radius: 20px; border: 2px dashed #ff4d6d; }
+        .beach-msg { font-family: 'Poppins', sans-serif; font-size: 1.1rem; color: #d6336c; line-height: 1.6; text-align: center; }
+
+        .btn-container { margin-top: 30px; padding-bottom: 100px; }
+        .yes-btn { padding: 15px 40px; background: #25d366; color: white; border-radius: 50px; text-decoration: none; display: inline-block; font-weight: bold; }
+        .no-btn { padding: 15px 40px; background: white; color: #d6336c; border-radius: 50px; border: 2px solid #d6336c; font-weight: bold; }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .floating-heart { position: absolute; color: #ff4d6d; opacity: 0.6; animation: heartFloat linear infinite; }
+        @keyframes heartFloat { 0% { transform: translateY(100vh); } 100% { transform: translateY(-10vh); } }
+    </style>
+</head>
+<body>
+
+    <div class="hearts-bg" id="heartsBg"></div>
+
+    <div id="door-container">
+        <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZzBucDkwNDlvdzdyeWtrZ2RjYjRxcHF6OGFnb2Y2anRlYjhxNGRicyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/dYfnPQ8FXSZhe/giphy.gif" class="scanner-gif">
+        
+        <div class="scanner-box" id="scanner">
+            <div class="scan-line" id="scanLine"></div>
+            <div class="heart-scanner">❤️</div>
+        </div>
+        
+        <p id="instruction" style="color: white; font-weight: bold; margin-top: 15px;">Verify your heart ❤️</p>
+        <button id="confirm-btn" onclick="openGiftScreen()">Identity Verified! Click to Continue ✅</button>
+    </div>
+
+    <div id="gift-screen">
+        <div class="box-container" onclick="openBox()">
+            <div class="box-lid"></div>
+            <div class="box-body"><div class="ribbon-text">Gaurav Loves Mona</div></div>
+        </div>
+        <h2 style="font-family: 'Dancing Script'; margin-top: 20px;">Open your gift...</h2>
+    </div>
+
+    <div id="main-content-area">
+        <div class="video-box"><video id="myVideo" playsinline controls loop><source src="us.mp4" type="video/mp4"></video></div>
+        
+        <div id="scroll-content">
+            <h2 style="font-family: 'Dancing Script'; font-size: 2.5rem;">Our Memories ❤️</h2>
+            <div class="gallery">
+                <img src="art1.jpg" class="gallery-img">
+                <img src="art2.jpg" class="gallery-img">
+                <img src="art3.jpg" class="gallery-img">
+                <img src="art4.jpg" class="gallery-img">
+                <img src="art5.jpg" class="gallery-img">
+                <img src="art6.jpg" class="gallery-img">
+            </div>
+
+            <div class="beach-section" id="beachSection">
+                <p class="beach-msg">
+                    "Hey sweetheart, I know you've always dreamed of me proposing to you on a beautiful beach. 🌊<br><br>
+                    I promise you, as I work hard on my fitness and lose this weight, I am preparing myself for that exact moment.<br><br>
+                    One day very soon, it won't just be a dream—it will be our reality. ❤️"
+                </p>
+                <div class="video-box"><video id="beachVideo" playsinline controls loop><source src="beach.mp4" type="video/mp4"></video></div>
+            </div>
+
+            <div class="btn-container">
+                <h2 style="font-family: 'Dancing Script'; font-size: 2.2rem;">Will you be mine forever?</h2>
+                <div style="margin-top: 20px;">
+                    <a href="https://wa.me/?text=YES!%20I%20love%20you%20Gaurav!%20❤️" class="yes-btn" id="yesBtn">YES! ❤️</a>
+                    <button class="no-btn" id="noBtn" onmouseover="moveNo()">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const scanner = document.getElementById('scanner');
+        const mainVid = document.getElementById('myVideo');
+        const beachVid = document.getElementById('beachVideo');
+        const confirmBtn = document.getElementById('confirm-btn');
+        let scanTimer; let yesScale = 1;
+
+        function startScan(e) {
+            e.preventDefault();
+            document.getElementById('scanLine').style.display = 'block';
+            scanTimer = setTimeout(() => {
+                alert("Identity Verified: Future Wifey ✅");
+                document.getElementById('scanLine').style.display = 'none';
+                scanner.style.display = 'none';
+                document.getElementById('instruction').style.display = 'none';
+                confirmBtn.style.display = 'block';
+            }, 2000);
+        }
+
+        function openGiftScreen() {
+            document.getElementById('door-container').style.display = 'none';
+            document.getElementById('gift-screen').style.display = 'flex';
+            setInterval(createHeart, 500);
+        }
+
+        function openBox() { 
+            document.getElementById('gift-screen').style.display = 'none'; 
+            document.getElementById('main-content-area').style.display = 'block'; 
+            document.body.style.overflowY = "auto"; 
+            mainVid.play(); 
+        }
+
+        function moveNo() { 
+            const noBtn = document.getElementById('noBtn'); const yesBtn = document.getElementById('yesBtn'); 
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+            noBtn.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+            yesScale += 0.3; yesBtn.style.transform = `scale(${yesScale})`; 
+        }
+
+        scanner.addEventListener('mousedown', startScan);
+        scanner.addEventListener('touchstart', startScan);
+        window.addEventListener('mouseup', () => { clearTimeout(scanTimer); document.getElementById('scanLine').style.display = 'none'; });
+
+        function createHeart() { 
+            const heart = document.createElement('div'); heart.classList.add('floating-heart'); heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw'; heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            document.getElementById('heartsBg').appendChild(heart);
+            setTimeout(() => heart.remove(), 5000); 
+        }
+    </script>
+</body>
+</html>
